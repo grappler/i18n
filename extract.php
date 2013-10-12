@@ -1,5 +1,6 @@
 <?php
-$pomo = dirname( dirname( dirname( __FILE__ ) ) ) . '/src/wp-includes/pomo';
+//$pomo = dirname( dirname( dirname( __FILE__ ) ) ) . '/pomo';
+$pomo = '/pomo'
 require_once "$pomo/entry.php";
 require_once "$pomo/translations.php";
 
@@ -12,11 +13,11 @@ class StringExtractor {
 		$this->rules = $rules;
 	}
 
-	function extract_from_directory( $dir, $excludes = array(), $includes = array(), $prefix = '' ) {
+	public function extract_from_directory( $dir, $excludes = array(), $includes = array(), $prefix = '' ) {
 		$old_cwd = getcwd();
 		chdir( $dir );
 		$translations = new Translations;
-		$file_names = (array) scandir( '.' );
+		$file_names = ( array ) scandir( '.' );
 		foreach ( $file_names as $file_name ) {
 			if ( '.' == $file_name || '..' == $file_name ) continue;
 			if ( preg_match( '/\.php$/', $file_name ) && $this->does_file_name_match( $prefix . $file_name, $excludes, $includes ) ) {
@@ -30,12 +31,12 @@ class StringExtractor {
 		return $translations;
 	}
 
-	function extract_from_file( $file_name, $prefix ) {
+	public function extract_from_file( $file_name, $prefix ) {
 		$code = file_get_contents( $file_name );
 		return $this->extract_entries( $code, $prefix . $file_name );
 	}
 
-	function does_file_name_match( $path, $excludes, $includes ) {
+	public function does_file_name_match( $path, $excludes, $includes ) {
 		if ( $includes ) {
 			$matched_any_include = false;
 			foreach( $includes as $include ) {
@@ -56,7 +57,7 @@ class StringExtractor {
 		return true;
 	}
 
-	function entry_from_call( $call, $file_name ) {
+	public function entry_from_call( $call, $file_name ) {
 		$rule = isset( $this->rules[$call['name']] )? $this->rules[$call['name']] : null;
 		if ( !$rule ) return null;
 		$entry = new Translation_Entry;
@@ -118,7 +119,7 @@ class StringExtractor {
 		return $entry;
 	}
 
-	function extract_entries( $code, $file_name ) {
+	public function extract_entries( $code, $file_name ) {
 		$translations = new Translations;
 		$function_calls = $this->find_function_calls( array_keys( $this->rules ), $code );
 		foreach( $function_calls as $call ) {
@@ -138,7 +139,7 @@ class StringExtractor {
 	 *	- args - array for the function arguments. Each string literal is represented by itself, other arguments are represented by null.
 	 *  - line - line number
 	 */
-	function find_function_calls( $function_names, $code ) {
+	public function find_function_calls( $function_names, $code ) {
 		$tokens = token_get_all( $code );
 		$function_calls = array();
 		$latest_comment = false;
@@ -199,7 +200,7 @@ class StringExtractor {
 			}
 			if ( T_CONSTANT_ENCAPSED_STRING == $id && $current_argument_is_just_literal ) {
 				// we can use eval safely, because we are sure $text is just a string literal
-				eval('$current_argument = '.$text.';' );
+				eval( '$current_argument = '.$text.';' );
 				continue;
 			}
 			$current_argument_is_just_literal = false;

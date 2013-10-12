@@ -12,7 +12,8 @@ if ( ! defined( 'T_ML_COMMENT' ) )
 else
 	    define( 'T_DOC_COMMENT', T_ML_COMMENT );
 
-$pomo = dirname( dirname( dirname( __FILE__ ) ) ) . '/src/wp-includes/pomo';
+//$pomo = dirname( dirname( dirname( __FILE__ ) ) ) . '/src/wp-includes/pomo';
+$pomo = '/pomo'
 require_once "$pomo/po.php";
 require_once "$pomo/mo.php";
 
