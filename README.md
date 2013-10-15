@@ -52,6 +52,11 @@ Contribute
 - [WordPress Coding Standards] (http://make.wordpress.org/core/handbook/coding-standards/php/)
 - [WordPress Documentaion Standards] (http://make.wordpress.org/core/handbook/inline-documentation-standards/php-documentation-standards/)
 
+Contributions
+-------------
+
+[WooCommerce has been great help](https://github.com/woothemes/woocommerce/tree/master/i18n/makepot). I was able to use some of the fixes from there.
+
 Support
 -------
 
