@@ -97,7 +97,7 @@ class PO extends Gettext_Translations {
 	 * @param string $string the string to format
 	 * @return string the poified string
 	 */
-	public function poify( $string ) {
+	public static function poify( $string ) {
 		$quote = '"';
 		$slash = '\\';
 		$newline = "\n";
@@ -127,7 +127,7 @@ class PO extends Gettext_Translations {
 	 * @param string $string PO-formatted string
 	 * @return string enascaped string
 	 */
-	public function unpoify( $string ) {
+	public static function unpoify( $string ) {
 		$escapes = array( 't' => "\t",
 						 'n'  => "\n",
 						 '\\' => '\\'
@@ -162,7 +162,7 @@ class PO extends Gettext_Translations {
 	 * @param string $string prepend lines in this string
 	 * @param string $with prepend lines with this string
 	 */
-	function prepend_each_line( $string, $with ) {
+	public static function prepend_each_line( $string, $with ) {
 		$php_with = var_export( $with, true );
 		$lines = explode( "\n", $string );
 		// do not prepend the string on the last empty line, artefact by explode
@@ -182,7 +182,7 @@ class PO extends Gettext_Translations {
 	 * @param string $char character to denote a special PO comment,
 	 * 	like :, default is a space
 	 */
-	public function comment_block( $text, $char=' ' ) {
+	public static function comment_block( $text, $char=' ' ) {
 		$text = wordwrap( $text, PO_MAX_LINE_LEN - 3 );
 		return PO::prepend_each_line( $text, "#$char " );
 	}
@@ -195,7 +195,7 @@ class PO extends Gettext_Translations {
 	 * @return string|bool PO-style formatted string for the entry or
 	 * 	false if the entry is empty
 	 */
-	public function export_entry(&$entry) {
+	public static function export_entry(&$entry) {
 		if ( is_null( $entry->singular ) ) return false;
 		$po = array();
 		if ( !empty( $entry->translator_comments ) ) $po[] = PO::comment_block( $entry->translator_comments );
@@ -345,7 +345,7 @@ class PO extends Gettext_Translations {
 		return array( 'entry' => $entry, 'lineno' => $lineno );
 	}
 
-	public function read_line( $f, $action = 'read' ) {
+	public static function read_line( $f, $action = 'read' ) {
 		static $last_line = '';
 		static $use_last_line = false;
 		if ( 'clear' == $action ) {
@@ -363,7 +363,7 @@ class PO extends Gettext_Translations {
 		return $line;
 	}
 
-	public function add_comment_to_entry( &$entry, $po_comment_line ) {
+	public static function add_comment_to_entry( &$entry, $po_comment_line ) {
 		$first_two = substr( $po_comment_line, 0, 2 );
 		$comment = trim( substr( $po_comment_line, 2 ) );
 		if ( '#:' == $first_two ) {
@@ -377,7 +377,7 @@ class PO extends Gettext_Translations {
 		}
 	}
 
-	public function trim_quotes( $s ) {
+	public static function trim_quotes( $s ) {
 		if ( substr( $s, 0, 1 ) == '"' ) $s = substr( $s, 1 );
 		if ( substr( $s, -1, 1 ) == '"' ) $s = substr( $s, 0, -1 );
 		return $s;

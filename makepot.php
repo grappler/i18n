@@ -8,6 +8,10 @@ if ( !defined( 'STDERR' ) ) {
 }
 
 class MakePOT {
+
+	// TODO: define the location of msginiq if there is an error
+	protected $msguniq = 'msguniq';
+
 	var $max_header_lines = 30;
 
 	var $projects = array(
@@ -201,7 +205,7 @@ class MakePOT {
 		return true;
 	}
 
-	public function wp_generic($dir, $args) {
+	public function wp_generic( $dir, $args ) {
 		$defaults = array(
 			'project'                  => 'wp-core',
 			'output'                   => null,
@@ -239,12 +243,12 @@ class MakePOT {
 			chdir( $old_dir );
 			/* Adding non-gettexted strings can repeat some phrases */
 			$output_shell = escapeshellarg( $output );
-			system( "msguniq --use-first $output_shell -o $output_shell" );
+			system( "$this->msguniq --use-first $output_shell -o $output_shell" );
 		}
 		return $res;
 	}
 
-	public function wp_core($dir, $output) {
+	public function wp_core( $dir, $output ) {
 		if ( file_exists( "$dir/wp-admin/user/about.php" ) ) return false;
 
 		return $this->wp_generic( $dir, array(
@@ -255,7 +259,7 @@ class MakePOT {
 		) );
 	}
 
-	public function wp_frontend($dir, $output) {
+	public function wp_frontend( $dir, $output ) {
 		if ( ! file_exists( "$dir/wp-admin/user/about.php" ) ) return false;
 
 		return $this->wp_generic( $dir, array(
@@ -267,7 +271,7 @@ class MakePOT {
 		) );
 	}
 
-	public function wp_admin($dir, $output) {
+	public function wp_admin( $dir, $output ) {
 		if ( ! file_exists( "$dir/wp-admin/user/about.php" ) ) return false;
 
 		$frontend_pot = $this->tempnam( 'frontend.pot' );
@@ -301,7 +305,7 @@ class MakePOT {
 			return false;
 			/* Adding non-gettexted strings can repeat some phrases */
 			$output_shell = escapeshellarg( $output );
-			system( "msguniq $output_shell -o $output_shell" );
+			system( "$this->msguniq $output_shell -o $output_shell" );
 
 		$common_pot = $this->tempnam( 'common.pot' );
 		if ( ! $common_pot )
@@ -312,7 +316,7 @@ class MakePOT {
 		return true;
 	}
 
-	public function wp_network_admin($dir, $output) {
+	public function wp_network_admin( $dir, $output ) {
 		if ( ! file_exists( "$dir/wp-admin/user/about.php" ) ) return false;
 
 		$frontend_pot = $this->tempnam( 'frontend.pot' );
@@ -419,7 +423,7 @@ class MakePOT {
 
 	}
 
-	public function get_first_lines( $filename, $lines = 30 ) {
+	public static function get_first_lines( $filename, $lines = 30 ) {
 		$extf = fopen( $filename, 'r' );
 		if ( !$extf ) return false;
 		$first_lines = '';
@@ -435,7 +439,7 @@ class MakePOT {
 	}
 
 
-	public function get_addon_header( $header, &$source ) {
+	public static function get_addon_header( $header, &$source ) {
 		if (preg_match( '|'.$header.':(.*)$|mi', $source, $matches ) )
 			return trim( $matches[1] );
 		else
@@ -479,7 +483,7 @@ class MakePOT {
 		$res = $potextmeta->append( $main_file, $output );
 		/* Adding non-gettexted strings can repeat some phrases */
 		$output_shell = escapeshellarg( $output );
-		system( "msguniq $output_shell -o $output_shell" );
+		system( "$this->msguniq $output_shell -o $output_shell" );
 		return $res;
 	}
 
@@ -534,7 +538,7 @@ class MakePOT {
 		}
 		/* Adding non-gettexted strings can repeat some phrases */
 		$output_shell = escapeshellarg( $output );
-		system( "msguniq $output_shell -o $output_shell" );
+		system( "$this->msguniq $output_shell -o $output_shell" );
 		return $res;
 	}
 
@@ -589,8 +593,8 @@ if ( $included_files[0] == __FILE__ ) {
 	$makepot = new MakePOT;
 	if ( ( 3 == count( $argv ) || 4 == count( $argv ) ) && in_array( $method = str_replace( '-', '_', $argv[1] ), get_class_methods( $makepot ) ) ) {
 		$res = call_user_func(array($makepot, $method), realpath($argv[2]), isset( $argv[3] )? $argv[3] : null);
-		if (false === $res) {
-			fwrite(STDERR, "Couldn't generate POT file!\n");
+		if ( false === $res ) {
+			fwrite( STDERR, "Couldn't generate POT file!\n" );
 		}
 	} else {
 		$usage  = "Usage: php makepot.php PROJECT DIRECTORY [OUTPUT]\n\n";
