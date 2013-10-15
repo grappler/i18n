@@ -110,7 +110,7 @@ class POMO_FileReader extends POMO_Reader {
 	}
 
 	public function read( $bytes ) {
-		return fread( $this->_f, $byte s);
+		return fread( $this->_f, $bytes );
 	}
 
 	public function seekto( $pos ) {

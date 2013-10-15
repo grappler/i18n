@@ -1,6 +1,6 @@
 <?php
 //$pomo = dirname( dirname( dirname( __FILE__ ) ) ) . '/pomo';
-$pomo = '/pomo'
+$pomo = dirname( __FILE__ ) . '/pomo';
 require_once "$pomo/entry.php";
 require_once "$pomo/translations.php";
 

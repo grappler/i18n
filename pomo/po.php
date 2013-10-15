@@ -251,7 +251,7 @@ class PO extends Gettext_Translations {
 			$lineno++;
 			$line = PO::read_line( $f );
 			if ( !$line )  {
-				if (feof( $f )) {
+				if ( feof( $f ) ) {
 					if ( $is_final( $context ) )
 						break;
 					elseif ( !$context ) // we haven't read a line and eof came
@@ -262,7 +262,7 @@ class PO extends Gettext_Translations {
 					return false;
 				}
 			}
-			if ( $line == "\n"  continue;
+			if ( $line == "\n" ) continue;
 			$line = trim($line);
 			if ( preg_match( '/^#/', $line, $m ) ) {
 				// the comment is the start of a new entry
@@ -272,18 +272,18 @@ class PO extends Gettext_Translations {
 					break;
 				}
 				// comments have to be at the beginning
-				if ($context && $context != 'comment') {
+				if ( $context && $context != 'comment' ) {
 					return false;
 				}
 				// add comment
-				$this->add_comment_to_entry($entry, $line);;
-			} elseif (preg_match('/^msgctxt\s+(".*")/', $line, $m)) {
-				if ($is_final($context)) {
-					PO::read_line($f, 'put-back');
+				$this->add_comment_to_entry( $entry, $line );;
+			} elseif ( preg_match( '/^msgctxt\s+(".*")/', $line, $m ) ) {
+				if ( $is_final( $context ) ) {
+					PO::read_line( $f, 'put-back' );
 					$lineno--;
 					break;
 				}
-				if ($context && $context != 'comment') {
+				if ( $context && $context != 'comment' ) {
 					return false;
 				}
 				$context = 'msgctxt';
